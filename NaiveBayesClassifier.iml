@@ -73,5 +73,18 @@
         <jarDirectory url="file://$USER_HOME$/Software/hadoop-3.2.1/share/hadoop/tools" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Software/hadoop-3.2.1/share/hadoop/common/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$USER_HOME$/Software/hadoop-3.2.1/share/hadoop/common/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$USER_HOME$/Software/hadoop-3.2.1/share/hadoop/common/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/Software/hadoop-3.2.1/share/hadoop/common/lib" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>
