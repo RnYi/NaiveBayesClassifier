@@ -20,8 +20,8 @@ public class TrainingClassCount {
     static Path localSamplePrefix = new Path("/home/rany/NBCorpus/Country");
     //HDFS的URI
     static String hdfsURI = "hdfs://localhost:9000";
-    //HDFS预测集的路径前缀
-    static Path predictionSetPrefixOnHDFS = new Path("/Prediction");
+    //本地预测集的路径前缀
+    static Path predictionSetPrefixOnLocal = new Path(localSamplePrefix, "Prediction");
     //HDFS上训练集的路径前缀
     static Path trainingSetPrefixOnHDFS = new Path("/Training");
     //HDFS上结果路径前缀
@@ -64,6 +64,7 @@ public class TrainingClassCount {
             for(FileStatus status: fileStatuses){
                 FilePathInputFormat.addInputPath(job, status.getPath());
             }
+            cleanUpAndMkdir(hdfs, resultPrefixOnHDFS);
             FileOutputFormat.setOutputPath(job, new Path(resultPrefixOnHDFS, "ClassCount"));
             System.exit(job.waitForCompletion(true)?0:1);
         }else{
@@ -85,13 +86,13 @@ public class TrainingClassCount {
              FileSystem hdfs = FileSystem.get(new URI(hdfsURI), new Configuration())) {
 
             //清空Prediction和Training文件夹
-            cleanUpAndMkdir(localfs, predictionSetPrefixOnHDFS);
+            cleanUpAndMkdir(localfs, predictionSetPrefixOnLocal);
             cleanUpAndMkdir(hdfs, trainingSetPrefixOnHDFS);
 
             //本地样本目录
             Path localSampleDir;
             //HDFS预测集目录
-            Path hdfsPredictionDir;
+            Path localPredictionDir;
             //HDFS训练集目录
             Path hdfsTrainingDir;
 
@@ -103,8 +104,8 @@ public class TrainingClassCount {
                 //通过参数确定并建立三个目录
                 arg = arg.toUpperCase();
                 localSampleDir = new Path(localSamplePrefix, arg);
-                hdfsPredictionDir = new Path(predictionSetPrefixOnHDFS, arg);
-                localfs.mkdirs(hdfsPredictionDir);
+                localPredictionDir = new Path(predictionSetPrefixOnLocal, arg);
+                localfs.mkdirs(localPredictionDir);
                 hdfsTrainingDir = new Path(trainingSetPrefixOnHDFS, arg);
                 hdfs.mkdirs(hdfsTrainingDir);
                 if (localfs.exists(localSampleDir)) {
@@ -123,7 +124,7 @@ public class TrainingClassCount {
                     //将剩下的文件复制到预测文件夹
                     System.out.println("开始上传预测集" + arg + ": " + fileStatuses.size());
                     for (FileStatus status : fileStatuses) {
-                        hdfs.copyFromLocalFile(status.getPath(), hdfsPredictionDir);
+                        localfs.copyFromLocalFile(status.getPath(), localPredictionDir);
                     }
                 } else {
                     System.out.println(arg + "不存在");
