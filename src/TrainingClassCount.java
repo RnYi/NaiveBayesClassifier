@@ -85,7 +85,7 @@ public class TrainingClassCount {
              FileSystem hdfs = FileSystem.get(new URI(hdfsURI), new Configuration())) {
 
             //清空Prediction和Training文件夹
-            cleanUpAndMkdir(hdfs, predictionSetPrefixOnHDFS);
+            cleanUpAndMkdir(localfs, predictionSetPrefixOnHDFS);
             cleanUpAndMkdir(hdfs, trainingSetPrefixOnHDFS);
 
             //本地样本目录
@@ -134,6 +134,22 @@ public class TrainingClassCount {
         }
     }
 }
+
+class FilePathInputFormat extends FileInputFormat<Text, IntWritable> {
+    @Override
+    protected boolean isSplitable(JobContext context, Path filename) {
+        return false;
+    }
+
+    @Override
+    public RecordReader<Text, IntWritable> createRecordReader(InputSplit inputSplit,
+                                                               TaskAttemptContext taskAttemptContext) {
+        FilePathRecordReader reader = new FilePathRecordReader();
+        reader.initialize(inputSplit, taskAttemptContext);
+        return reader;
+    }
+}
+
 class FilePathRecordReader extends RecordReader<Text, IntWritable> {
 
     private FileSplit fileSplit;
@@ -178,19 +194,3 @@ class FilePathRecordReader extends RecordReader<Text, IntWritable> {
         //Do nothing
     }
 }
-
-class FilePathInputFormat extends FileInputFormat<Text, IntWritable> {
-    @Override
-    protected boolean isSplitable(JobContext context, Path filename) {
-        return false;
-    }
-
-    @Override
-    public RecordReader<Text, IntWritable> createRecordReader(InputSplit inputSplit,
-                                                               TaskAttemptContext taskAttemptContext) {
-        FilePathRecordReader reader = new FilePathRecordReader();
-        reader.initialize(inputSplit, taskAttemptContext);
-        return reader;
-    }
-}
-
