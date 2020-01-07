@@ -15,10 +15,11 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 public class Test {
     public static void main(String[] args) throws URISyntaxException, IOException {
-        Path path = new Path("/home/rany/NBCorpus/Country/CHINA");
+        Path path = new Path("/home/rany/NBCorpus/Country");
         FileSystem localfs = FileSystem.get(new URI("file:///"), new Configuration());
-        for(FileStatus s:localfs.listStatus(path)){
-            System.out.println(s.getPath());
+        FileStatus[] fileStatuses = localfs.listStatus(path);
+        for(FileStatus status: fileStatuses){
+            System.out.println(status.getPath());
         }
     }
 }

@@ -2,6 +2,7 @@
   <dictionary name="rany">
     <words>
       <w>hdfs</w>
+      <w>localfs</w>
     </words>
   </dictionary>
 </component>
