@@ -1,5 +1,4 @@
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.examples.WordCount;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -73,16 +72,10 @@ public class TrainingWordCount {
         if(hdfs.exists(wordCountResultPath)){
             hdfs.delete(wordCountResultPath,true);
         }
-        FileOutputFormat.setOutputPath(job, new Path(resultPrefixOnHDFS, "WordCount"));
+        FileOutputFormat.setOutputPath(job, wordCountResultPath);
         System.exit(job.waitForCompletion(true)?0:1);
     }
 
-    public static void cleanUpAndMkdir(FileSystem fs, Path path) throws IOException {
-        if(fs.exists(path)){
-            fs.delete(path, true);
-        }
-        fs.mkdirs(path);
-    }
 }
 
 class TextPair implements WritableComparable<TextPair>{
