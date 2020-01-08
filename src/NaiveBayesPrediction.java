@@ -102,12 +102,12 @@ public class NaiveBayesPrediction {
                     wordList.add(line);
                 }
                 String predictionClass ="";
-                double maxprob = Double.NEGATIVE_INFINITY;
+                double maxProb = Double.NEGATIVE_INFINITY;
                 for(String className: classNames){
                     double prob = ProbForClassOfTheDoc(className, wordList);
-                    if(maxprob<prob){
+                    if(maxProb<prob){
                         predictionClass = className;
-                        maxprob = prob;
+                        maxProb = prob;
                     }
                 }
                 if(predictionClass.equals(realClass)){
